@@ -77,10 +77,8 @@ pickle.dump([],open("cost.txt",'wb'))
 
 # Launch the graph in a session
 with tf.Session() as sess:
-    # you need to initialize all variables
-    # saver.restore(sess, "/home/ubuntu/model7.ckpt")
     tf.global_variables_initializer().run()
-    # saver.restore(sess,"/home/lgy1425/p1/sess/model23.ckpt")
+    saver.restore(sess,"/home/lgy1425/p1/sess/model23.ckpt")
     for i in range(300):
         print i
         costs = []
@@ -98,58 +96,58 @@ with tf.Session() as sess:
         pickle.dump(bcost,open("cost.txt",'wb'))
 
 
-        # test_indices = np.arange(len(teX))
-        # np.random.shuffle(test_indices)
-        # test_indices = test_indices[0:test_size]
-        #
-        # not_count = 0
-        # b_count = 0
-        # m_count = 0
-        #
-        # not_nequal = 0
-        # b_nequal = 0
-        # m_nequal = 0
-        #
-        # b_m = 0
-        # m_b = 0
-        # n_m = 0
-        #
-        # for x, y in zip(teX[test_indices], teY[test_indices]):
-        #     if np.argmax(y) == 0:
-        #         not_count += 1
-        #     elif np.argmax(y) == 1:
-        #         b_count += 1
-        #     elif np.argmax(y) == 2:
-        #         m_count += 1
-        #
-        #     prediction = sess.run(predict_op,
-        #                           feed_dict={X: x.reshape(1, 50, 50, 1), p_keep_conv: 1.0, p_keep_hidden: 1.0})
-        #     answer = np.argmax(y)
-        #
-        #     if [answer] != prediction:
-        #         if answer == 0:
-        #             not_nequal += 1
-        #             if prediction == [2] :
-        #                 n_m += 1
-        #
-        #         elif answer == 1:
-        #             b_nequal += 1
-        #             if prediction == [2]:
-        #                 b_m += 1
-        #         elif answer == 2:
-        #             m_nequal += 1
-        #             if prediction == [1]:
-        #                 m_b += 1
-        #                 # print np.argmax(y),sess.run(predict_op, feed_dict={X: x.reshape(1,50,50,1)})
-        # if not_count > 0 and b_count > 0 and m_count > 0 and b_nequal > 0 and m_nequal > 0:
-        #     print "not roi : " + str(float(not_nequal / float(not_count))) + " benign : " + str(
-        #         float(b_nequal / float(b_count))) + " malignant : " + str(float(m_nequal / float(m_count)))
-        #     print "error n-> " + str(float(n_m/float(not_nequal))) + "b->m " + str(float(b_m / float(b_nequal))) + "m->b " + str(float(m_b / float(m_nequal)))
-        #
-        #
-        # # for x,y in zip(teX,teY) :
-        # #     print np.argmax(y),sess.run(predict_op, feed_dict={X: x.reshape(1,50,50,1)})
-        #
-        # print (i, np.mean(np.argmax(teY[test_indices], axis=1) == sess.run(predict_op, feed_dict={X: teX[test_indices],p_keep_conv: 1.0, p_keep_hidden: 1.0})))
+        test_indices = np.arange(len(teX))
+        np.random.shuffle(test_indices)
+        test_indices = test_indices[0:test_size]
+        
+        not_count = 0
+        b_count = 0
+        m_count = 0
+        
+        not_nequal = 0
+        b_nequal = 0
+        m_nequal = 0
+        
+        b_m = 0
+        m_b = 0
+        n_m = 0
+        
+        for x, y in zip(teX[test_indices], teY[test_indices]):
+            if np.argmax(y) == 0:
+                not_count += 1
+            elif np.argmax(y) == 1:
+                b_count += 1
+            elif np.argmax(y) == 2:
+                m_count += 1
+        
+            prediction = sess.run(predict_op,
+                                  feed_dict={X: x.reshape(1, 50, 50, 1), p_keep_conv: 1.0, p_keep_hidden: 1.0})
+            answer = np.argmax(y)
+        
+            if [answer] != prediction:
+                if answer == 0:
+                    not_nequal += 1
+                    if prediction == [2] :
+                        n_m += 1
+        
+                elif answer == 1:
+                    b_nequal += 1
+                    if prediction == [2]:
+                        b_m += 1
+                elif answer == 2:
+                    m_nequal += 1
+                    if prediction == [1]:
+                        m_b += 1
+                        print np.argmax(y),sess.run(predict_op, feed_dict={X: x.reshape(1,50,50,1)})
+        if not_count > 0 and b_count > 0 and m_count > 0 and b_nequal > 0 and m_nequal > 0:
+            print "not roi : " + str(float(not_nequal / float(not_count))) + " benign : " + str(
+                float(b_nequal / float(b_count))) + " malignant : " + str(float(m_nequal / float(m_count)))
+            print "error n-> " + str(float(n_m/float(not_nequal))) + "b->m " + str(float(b_m / float(b_nequal))) + "m->b " + str(float(m_b / float(m_nequal)))
+        
+        
+        for x,y in zip(teX,teY) :
+            print np.argmax(y),sess.run(predict_op, feed_dict={X: x.reshape(1,50,50,1)})
+        
+        print (i, np.mean(np.argmax(teY[test_indices], axis=1) == sess.run(predict_op, feed_dict={X: teX[test_indices],p_keep_conv: 1.0, p_keep_hidden: 1.0})))
 
     save_path = saver.save(sess, "/home/lgy1425/p1/sess/model23-1-cost.ckpt")
